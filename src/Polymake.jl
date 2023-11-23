@@ -162,6 +162,8 @@ include(libpolymake_julia_jll.generate_deps_tree)
 
 include(type_translator)
 
+_pm_rand_helper() = rand(Int64)
+
 function __init__()
 
     binpaths = [
@@ -256,6 +258,9 @@ function __init__()
        end
        application("common")
     end
+
+    pm_randfun = CxxWrap.@safe_cfunction(_pm_rand_helper, Int64, ())
+    set_rand_source(pm_randfun)
 
     # We need to set the Julia types as c types for polymake
     for (name, c_type) in C_TYPES
